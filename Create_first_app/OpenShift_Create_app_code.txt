@@ -1,0 +1,59 @@
+apiServer=$(az aro show -g $RESOURCEGROUP -n $CLUSTER --query apiserverProfile.url -o tsv)
+
+# login to OC using CLI 
+
+oc login $apiServer -u kubeadmin -p RRKX9-9I38g-LunHi-KdwMq
+
+# Create a new project 
+
+oc new-project demoproject
+
+# Launch the web console 
+
+az aro show \
+    --name <cluster name> \
+    --resource-group <resource group> \
+    --query "consoleProfile.url" -o tsv
+
+# Delete any existing demo project 
+oc delete project demoproject
+
+# Create the demo project 
+oc new-project demoproject
+
+# Create a new application 
+
+oc new-app python:latest~https://github.com/sclorg/django-ex.git
+
+#review the status of the build 
+
+oc status
+
+# Expose the app outside the cluster 
+
+oc expose service/django-ex
+
+# retrieve the app by URL 
+
+oc get route django-ex
+
+
+# Trigger the binary build 
+git clone https://github.com/sclorg/django-ex.git
+
+
+# change the sub-directory 
+cd django-ex
+
+# open the app in the code
+
+code welcome/templates/welcome/index.html
+
+# start the build using the following command
+
+oc start-build django-ex --from-dir=. --wait
+
+# Clean up the project 
+
+oc delete project demoproject
+

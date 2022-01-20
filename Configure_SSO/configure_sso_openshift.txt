@@ -1,0 +1,11 @@
+  
+domain=$(az aro show -g techacademy_rg -n techacademyaro --query clusterProfile.domain -o tsv)
+location=$(az aro show -g techacademy_rg -n techacademyaro --query location -o tsv)
+echo "OAuth callback URL: https://oauth-openshift.apps.$domain.$location.aroapp.io/oauth2callback/AAD"
+
+
+OAuth callback URL: https://oauth-openshift.apps.techacademyaro.southeastasia.aroapp.io/oauth2callback/AAD
+
+#Create ARO private cluster
+
+az aro create --resource-group MyResourceGroup --name MyCluster --vnet MyVnet --master-subnet MyMasterSubnet --worker-subnet MyWorkerSubnet --apiserver-visibility Private --ingress-visibility Private

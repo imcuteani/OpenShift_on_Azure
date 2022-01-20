@@ -1,0 +1,4 @@
+LOCATION=centralindia
+az vm list-usage -l $LOCATION \
+--query "[?contains(name.value, 'standardDSv3Family')]" \
+-o table

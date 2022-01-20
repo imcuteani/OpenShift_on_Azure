@@ -1,0 +1,37 @@
+Enabling monitoring of existing ARO Cluster 4 
+
+curl -o enable-monitoring.sh -L https://aka.ms/enable-monitoring-bash-script
+
+#Integrate with existing workspace 
+
+export azureAroV4ClusterResourceId="/subscriptions/<subscriptionId>/resourceGroups/<resourceGroupName>/providers/Microsoft.RedHatOpenShift/OpenShiftClusters/<clusterName>"
+
+For example:
+
+`bash enable-monitoring.sh --resource-id $azureAroV4ClusterResourceId
+
+#Integrate with existing workspace 
+
+az login 
+
+# list out the az accounts list 
+
+az account list --all -o table
+
+# Set out the subscription id of existing Log analytics workspace
+
+az account set -s <subscriptionId of the workspace>
+
+# List out the Azure Log analytics workspaces
+
+az resource list --resource-type Microsoft.OperationalInsights/workspaces -o json
+
+# enable monitoring of the log analytics 
+
+export azureAroV4ClusterResourceId="/subscriptions/<subscriptionId>/resourceGroups/<resourceGroupName>/providers/Microsoft.RedHatOpenShift/OpenShiftClusters/<clusterName>"
+
+export logAnalyticsWorkspaceResourceId="/subscriptions/<subscriptionId>/resourceGroups/<resourceGroupName>/providers/microsoft.operationalinsights/workspaces/<workspaceName>"
+
+# the same Azure ARO cluster can be monitored using the enable-monitoring shell script 
+
+bash enable-monitoring.sh --resource-id $azureAroV4ClusterResourceId --workspace-id $logAnalyticsWorkspaceResourceId

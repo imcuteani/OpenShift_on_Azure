@@ -1,0 +1,59 @@
+# Create a vnet with two empty subnets 
+
+LOCATION=southeastasia          # the location of your cluster
+RESOURCEGROUP=aro-rg            # the name of the resource group where you want to create your cluster
+CLUSTER=techacademycluster                # the name of your cluster
+ClientId=90b0b8af-d034-4e9b-99d0-7b7c3920a619
+ClientSecret=6un7Q~iZcIZptIZdEMTwCzD.i2R2K-sMPpGkA
+
+# Create Resource Group 
+
+az group create \
+  --name $RESOURCEGROUP \
+  --location $LOCATION
+
+  # Create Virtual network 
+
+  az network vnet create \
+   --resource-group $RESOURCEGROUP \
+   --name aro-vnet \
+   --address-prefixes 10.0.0.0/22
+
+   # Add an empty subnet for the master nodes 
+
+   az network vnet subnet create \
+  --resource-group $RESOURCEGROUP \
+  --vnet-name aro-vnet \
+  --name master-subnet \
+  --address-prefixes 10.0.0.0/23 \
+  --service-endpoints Microsoft.ContainerRegistry
+
+  # Add an empty subnet for the worker nodes
+
+  az network vnet subnet create \
+  --resource-group $RESOURCEGROUP \
+  --vnet-name aro-vnet \
+  --name worker-subnet \
+  --address-prefixes 10.0.2.0/23 \
+  --service-endpoints Microsoft.ContainerRegistry
+
+  # Disable subnet private endpoint policies on the master subnet 
+
+  az network vnet subnet update \
+  --name master-subnet \
+  --resource-group $RESOURCEGROUP \
+  --vnet-name aro-vnet \
+  --disable-private-link-service-network-policies true
+
+  # Create the ARO Cluster 
+
+  az aro create \
+  --resource-group $RESOURCEGROUP \
+  --name $CLUSTER \
+  --vnet aro-vnet \
+  --master-subnet master-subnet \
+  --worker-subnet worker-subnet
+  --pull-secret @pull-secret.txt
+  --client-id $ClientId
+  --client-secret $ClientSecret
+  

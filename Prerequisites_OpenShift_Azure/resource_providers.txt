@@ -1,0 +1,23 @@
+# Register the Resource providers 
+
+az account set --subscription <SUBSCRIPTION ID>
+
+# Register the Microsoft.RedHatOpenShift resource provider
+
+az provider register -n Microsoft.RedHatOpenShift --wait
+
+# Register the Microsoft.Compute resource provider
+
+az provider register -n Microsoft.Compute --wait
+
+# Register the Microsoft.Storage provider
+
+az provider register -n Microsoft.Storage --wait
+
+# Register the Microsoft.Authorization resource provider
+
+az provider register -n Microsoft.Authorization --wait
+
+# Install Preview features of ARO (optional)
+
+az feature register --namespace Microsoft.RedHatOpenShift --name preview
